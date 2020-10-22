@@ -1,0 +1,40 @@
+<!doctype html>
+
+<style>
+/* html, body { margin: 0; padding: 0; overflow: hidden; } */
+/* canvas { width: 100%; height: 100%; } */
+canvas { width: 512px; height: 512px; }
+</style>
+
+<canvas id="canvas" width="1024" height="1024"></canvas>
+
+<script type="module">
+import * as algodat     from './algodat/algodat.js';
+import * as vordergrund from './vordergrund.js';
+
+for (let y = 0; y < 10; y++) {
+	for (let x = 0; x < 10; x++) {
+		algodat.point(x, y)[0] = 0.5;
+	}
+}
+
+var pause = false;
+
+async function animationFrameLoop (callback) {
+	while (true) {
+		for (let i = 0; i < 1; i++) var t = await new Promise(f => requestAnimationFrame(f));
+		if (pause) continue;
+		for (let i = 0; i < 7; i++) algodat.next();
+		algodat.normalize();
+		if (Math.random() < 1.0) algodat.filterAggressive();
+		vordergrund.draw();
+	}
+}
+
+window.addEventListener('load', animationFrameLoop);
+
+window.addEventListener('click'  , event => pause = !pause);
+window.addEventListener('keydown', event => pause = !pause);
+
+
+</script>
